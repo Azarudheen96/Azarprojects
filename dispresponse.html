@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<style>
+		#keyword
+		{
+		 background:#FFFFFF;
+		 height:20px;
+		 width:300px;
+		}
+		#selectedKeyword
+		{
+		 background:#FFFFFF;
+		 height:25px;
+		 width:300px;
+		}
+		#search{
+		height:35px;
+		width:80px;
+		}
+	.myButton {
+	background-color:#44c767;
+	-moz-border-radius:28px;
+	-webkit-border-radius:28px;
+	border-radius:30px;
+	border:1px solid #18ab29;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:15px;
+	padding:7px 18px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #2f6627;
+}
+.myButton:hover {
+	background-color:#5cbf2a;
+}
+.myButton:active {
+	position:relative;
+	top:1px;
+}
+</style>
+</head>
+	<body onload="view()">
+	<center>
+	<div class="row">
+		   <div class="videos">
+	         <h2>DISPLAYING GITHUB REPOSITORIES </h2>
+			 <input type = "text" name="keyword" id="keyword" placeholder="Type the keyword to be search...">
+			&nbsp&nbsp&nbsp&nbsp&nbsp<select name="dropdown" id="selectedKeyword" onchange="drop()">
+                <option value="">Select the keyword here ...</option>
+				<option value="Bootstrap">bootstrap</option>
+				<option value="javascript">javascript</option>
+				<option value="snakegame">snakegame</option>
+				<option value="2048">2048</option>
+				</select>
+			<br><br>
+			<input id = "search" class="myButton" type = "button" onclick="calll()" value="Search">
+			&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<input type ="button" class="myButton" onclick="view()"  value="Click to Display the stored data">
+			<div id="results"></div><br>
+		    <div id="readable"></div>
+			<div id="json"></div>
+		   </div>
+		</div>
+		</center>
+		<script>
+			function calll(){
+				var url = "https://api.github.com/search/repositories?q="+document.getElementById("keyword").value+"+language:assembly&sort=stars&order=desc"
+				window.open(url,'windowname1','width=500,height=700');
+				var Data,position,id;
+				Data = httpGet(url);
+				var obj = JSON.parse(Data);
+				var obj1 = JSON.parse('{"des":"crct","hi":{"o1":"oi"}}');
+				document.getElementById("readable").innerHTML = "The Response  is "+obj.total_count+" "+" "+obj.incomplete_results+" "+obj.id+" "+obj.items.name+" "+"<br>";
+				document.getElementById("json").innerHTML = obj1.des+obj1.hi.o1;
+				//document.getElementById("demo").innerHTML = obj.name + ", " + obj.full_name;
+			    position=Data.indexOf("\"id\"");
+				position+=6;
+				id="";
+				while(1){
+					if(Data[position]=="\"") 
+						break;
+					id+=Data[position];
+					position++;
+				}
+				document.getElementById("results").innerHTML="Repository Id is  : "+id;
+	           localStorage.setItem("repositoryid", id);
+	}
+			function drop(){
+				document.getElementById("keyword").value=document.getElementById("selectedKeyword").value;
+			}
+			function httpGet(theUrl)
+			{
+			    var xmlHttp = null;
+				xmlHttp = new XMLHttpRequest();
+				xmlHttp.open( "GET", theUrl, false );
+				xmlHttp.send( null );
+				return xmlHttp.responseText;
+			}
+			function view(){
+				if(localStorage.getItem("repositoryid")==null){
+					alert("No local Storage available...The next time you load the page after searching any videos, previously searched video id will be displayed");
+					return;
+				}
+		 document.getElementById("results").innerHTML="<font size='3px' >Your Last searched repos id  is : </font> "+localStorage.getItem("repositoryid");
+			alert(localStorage.getItem("repositoryid"));
+	   }
+	</script>
+	</body>
+</html>
+
+
